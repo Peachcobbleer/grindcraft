@@ -1,0 +1,126 @@
+<!doctype html> <html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> <meta name="apple-mobile-web-app-capable" content="yes">
+<title>GrindCraft</title>
+
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@0e38748f1d1544dd8243bdcc74390c6027059038/grindcraft/">
+
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+    }
+
+    #openfl-content {
+        width: 100%;
+        height: 100%;
+        background: #000;
+    }
+
+    .no-select {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @font-face {
+        font-family: "Arial";
+        src: url("fonts/ARIAL.TTF") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: "Minecraftia";
+        src: url("fonts/Minecraftia.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+    }
+</style>
+
+</head> <body> <noscript> JavaScript is required to play GrindCraft. </noscript>
+<div id="openfl-content"></div>
+
+<script src="GrindCraft.js"></script>
+<script src="CMG.js"></script>
+
+<script>
+    (() => {
+        "use strict";
+
+        const gameContainer = document.getElementById("openfl-content");
+
+        // Prevent touch scrolling while the game is active.
+        window.addEventListener(
+            "touchmove",
+            event => event.preventDefault(),
+            {
+                passive: false
+            }
+        );
+
+        // Prevent text selection when the game canvas is loaded.
+        const enableNoSelect = () => {
+            if (document.querySelector("canvas")) {
+                document.body.classList.add("no-select");
+            }
+        };
+
+        setTimeout(enableNoSelect, 2000);
+
+        // Start the OpenFL/Lime game after the page loads.
+        window.addEventListener("load", () => {
+            if (
+                typeof window.lime === "undefined" ||
+                typeof window.lime.embed !== "function"
+            ) {
+                console.error("OpenFL/Lime failed to load.");
+
+                gameContainer.innerHTML = `
+                    <div style="
+                        color: #fff;
+                        text-align: center;
+                        font-family: Arial, sans-serif;
+                        padding-top: 50px;
+                    ">
+                        Game failed to load.
+                    </div>
+                `;
+
+                return;
+            }
+
+            try {
+                window.lime.embed(
+                    "GrindCraft",
+                    "openfl-content",
+                    0,
+                    0,
+                    {
+                        parameters: {}
+                    }
+                );
+            } catch (error) {
+                console.error("Failed to start GrindCraft:", error);
+
+                gameContainer.innerHTML = `
+                    <div style="
+                        color: #fff;
+                        text-align: center;
+                        font-family: Arial, sans-serif;
+                        padding-top: 50px;
+                    ">
+                        Unable to start the game.
+                    </div>
+                `;
+            }
+        });
+    })();
+</script>
+
+</body> </html>
